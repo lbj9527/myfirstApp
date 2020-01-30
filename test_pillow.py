@@ -60,7 +60,7 @@ def pic_creatVerificationCode():    #4
 if __name__=='__main__':
     #pic_add_num('src_1.jpg')
     #pic_narrow('src_1.jpg')
-    #pic_fuzzy('src_2.jpg')
+    pic_fuzzy('src_2.jpg')
     pic_creatVerificationCode()
 
 
