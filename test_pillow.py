@@ -58,9 +58,9 @@ def pic_creatVerificationCode():    #4
     im.save('pic/veriCode.jpg', 'jpeg')
 
 if __name__=='__main__':
-    pic_add_num('pic/src_1.jpg')
-    pic_narrow('pic/src_1.jpg')
-    pic_fuzzy('pic/src_2.jpg')
+    #pic_add_num('pic/src_1.jpg')
+    #pic_narrow('pic/src_1.jpg')
+    #pic_fuzzy('pic/src_2.jpg')
     pic_creatVerificationCode()
 
 
