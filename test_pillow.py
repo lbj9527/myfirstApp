@@ -20,18 +20,18 @@ def pic_add_num(img):   #1
     w,h = im.size
     draw = ImageDraw.Draw(im)
     draw.text((w-20,0), '1', font=font, fill=fillcolor)
-    im.save('dramNum.jpg', 'jpeg')
+    im.save('pic/dramNum.jpg', 'jpeg')
 
 def pic_narrow(img):    #2
     im = Image.open(img)
     w,h = im.size
     im.thumbnail((w//2, h//2))
-    im.save('narrow.jpg', 'jpeg')
+    im.save('pic/narrow.jpg', 'jpeg')
 
 def pic_fuzzy(img):    #3
     im = Image.open(img)
     im2 = im.filter(ImageFilter.BLUR)
-    im2.save('fuzzy.jpg', 'jpeg')
+    im2.save('pic/fuzzy.jpg', 'jpeg')
 
 def pic_creatVerificationCode():    #4
     #240 x 60
@@ -55,12 +55,12 @@ def pic_creatVerificationCode():    #4
 
     #模糊
     im = im.filter(ImageFilter.BLUR)
-    im.save('veriCode.jpg', 'jpeg')
+    im.save('pic/veriCode.jpg', 'jpeg')
 
 if __name__=='__main__':
-    #pic_add_num('src_1.jpg')
-    #pic_narrow('src_1.jpg')
-    #pic_fuzzy('src_2.jpg')
+    pic_add_num('pic/src_1.jpg')
+    pic_narrow('pic/src_1.jpg')
+    pic_fuzzy('pic/src_2.jpg')
     pic_creatVerificationCode()
 
 
