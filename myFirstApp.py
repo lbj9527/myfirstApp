@@ -71,6 +71,7 @@ def main():
     stu.watch_av()
     t = Teacher('王聪', 38, '专家')
     t.teach('python程序设计')
+    t.watch_av()
 
 if __name__ == '__main__':
     main()
