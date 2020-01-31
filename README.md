@@ -5,6 +5,10 @@
 02 -> 随机码生成  
 03 -> 关系数据库MYSQL  
 
+学习相关小功能例子  
+DIR:./study  
+yield.py -> yield使用  
+
 
 
 
