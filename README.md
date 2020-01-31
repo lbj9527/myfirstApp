@@ -7,7 +7,7 @@
 
 学习相关小功能例子  
 DIR:./study  
-yield.py -> yield使用  
+yield -> yield的用法详解
 
 
 
