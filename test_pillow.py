@@ -62,6 +62,7 @@ if __name__=='__main__':
     #pic_narrow('pic/src_1.jpg')
     #pic_fuzzy('pic/src_2.jpg')
     pic_creatVerificationCode()
+    #end end
 
 
 
