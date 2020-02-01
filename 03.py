@@ -39,3 +39,10 @@ def save_code():
 
 if __name__ == '__main__':
     save_code()
+
+
+###################备注###########################
+#1.安装mysql
+#2.安装mysql.connector
+#3.创建test数据库
+#4.运行本程序
