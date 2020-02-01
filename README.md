@@ -3,11 +3,13 @@
 学习python小例子  
 01 -> pillow库  
 02 -> 随机码生成  
-03 -> 关系数据库MYSQL  
+03 -> 关系数据库MYSQL
+04 -> 统计英文文本，单词数量  
 
 学习相关小功能例子  
 DIR:./study  
-yield -> yield的用法详解
+yield   -> yield的用法详解
+regular -> 正则表达式的用法详解
 
 
 
