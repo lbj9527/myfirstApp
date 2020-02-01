@@ -1,6 +1,10 @@
 astroid==2.3.3
+beautifulsoup4==4.8.2
+certifi==2019.11.28
+chardet==3.0.4
 colorama==0.4.3
 dnspython==1.16.0
+idna==2.8
 isort==4.3.21
 lazy-object-proxy==1.4.3
 mccabe==0.6.1
@@ -9,5 +13,8 @@ mysql-connector-python==8.0.19
 Pillow==7.0.0
 protobuf==3.6.1
 pylint==2.4.4
+requests==2.22.0
 six==1.14.0
+soupsieve==1.9.5
+urllib3==1.25.8
 wrapt==1.11.2
