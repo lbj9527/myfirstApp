@@ -8,7 +8,6 @@ with open('file/filtered_words.txt', 'r', encoding = 'UTF-8') as f:
     for w in f.readlines():
         word_filter.add(w.strip())
 
-
 while True:
     s = input()
     if s == 'exit':
