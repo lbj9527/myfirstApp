@@ -52,9 +52,11 @@ def getHupuUrl(startPage,stopPage,videoOrPic= False):
             url = url
         else:
             url = url + '-' + str(index)
+        print(url)
         html = requests.get(url)
         soup = BeautifulSoup(html.text, 'html.parser')
         urls = soup.findAll('a', target="_blank")
+        print(urls)
         for url in urls:
             srcs = url['href']
             words = re.findall(r'/[0-9]{8}\.html', srcs)
@@ -117,6 +119,7 @@ def getOnePagePic(img_address = str()):
 #例子4：获取虎扑单个帖子视频
 def getOnePageVideo(video_address = str()):
      #进入帖子
+    print("进入帖子")
     video_html = requests.get(video_address)
     soup_video = BeautifulSoup(video_html.text, 'html.parser')
     video_urls = soup_video.findAll('video')
@@ -153,7 +156,7 @@ if __name__ == "__main__":
     #getUrlLink()
     #getTiebaPic()
 
-    getHupuUrl(1,11,True)
+    getHupuUrl(11,21,False)
     #getOnePageVideo('https://bbs.hupu.com/32131532.html')
 
 
