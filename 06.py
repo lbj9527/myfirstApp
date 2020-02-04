@@ -47,23 +47,26 @@ def getTiebaPic():
 def getHupuUrl(startPage,stopPage,videoOrPic= False):
     #虎扑步行街主干道的帖子链接
     for index in range(startPage,stopPage):
-        print('步行街主干道第%s页' % index)
-        url = 'https://bbs.hupu.com/bxj'
-        if index==1:
-            url = url
-        else:
-            url = url + '-' + str(index)
+        # print('步行街主干道第%s页' % index)
+        # url = 'https://bbs.hupu.com/bxj'
+        # if index==1:
+        #     url = url
+        # else:
+        #     url = url + '-' + str(index)
+        url =  'https://my.hupu.com/search?fid=34&type=topic&q=%E5%A6%B9%E5%AD%90'
 
         #虚拟一个headers：使用UserAgent伪造一个用户，添加自己的cookie
         ua = UserAgent()
-        hs = {'user-agent':ua.random,'cookie':'_dacevid3=d45addeb.76df.8827.9ddb.d9b8bd3538d1; acw_tc=76b20f6a15807208550333511e6048812a60cd5e76a7e23e56f0a7a314412d; __gads=ID=f0266ab11f7a03e0:T=1580720857:S=ALNI_MagBH-J7WMb_uniATmi3TEKwQJLlg; _fmdata=4mpUKjarJLOffOtXKfD2vzb%2B7fsRpeT9lDmsk7w0WFvRJ02GrVRreTdzU15dep%2BtPh%2BdjVcouL0XJHmqajM1C57pwW4MrnoPLAKjbMezhI4%3D; _ga=GA1.2.884080577.1580754832; _gid=GA1.2.135845903.1580754832; __dacevid3=0xc0a0b535ad0a166d; __closeapp=1; _HUPUSSOID=50310739-338f-489f-bdd5-3a31fbf81361; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%221700a4e53eb4f-08d457ee4c087b-b383f66-1440000-1700a4e53edfb%22%2C%22%24device_id%22%3A%221700a4e53eb4f-08d457ee4c087b-b383f66-1440000-1700a4e53edfb%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer_host%22%3A%22%22%7D%7D; _cnzz_CV30020080=buzi_cookie%7Cd45addeb.76df.8827.9ddb.d9b8bd3538d1%7C-1; AUM=dg77BvbLBJirihebQtxZUlKnjN5nt-yqlWtWpTno5j7lw; _CLT=b0c2a05996d8b48b354e1fa4ddfc1fef; u=64110360|6JmO5omRSlIwODU0MTQ1NjM3|4986|f5c133ad45dda64a8365ac20542d4164|45dda64a8365ac20|aHVwdV9lODI3Y2E3M2RlZmVlZWJk; us=91f8e68654c24668122c2162a8418f8c5bebaf73785106d71eb6fcb9502aaec8622ab596e70b21576c370304fbc2309e3d9e3313a3f45ff2e05330686732a434; ua=25914162; Hm_lvt_39fc58a7ab8a311f2f6ca4dc1222a96e=1580755509,1580755513,1580760867,1580764183; Hm_lpvt_39fc58a7ab8a311f2f6ca4dc1222a96e=1580764218; __dacevst=0c861d90.e7d6475f|1580766036014'}
+        hs = {'user-agent':ua.random,'cookie':'_dacevid3=d45addeb.76df.8827.9ddb.d9b8bd3538d1; acw_tc=76b20f6a15807208550333511e6048812a60cd5e76a7e23e56f0a7a314412d; __gads=ID=f0266ab11f7a03e0:T=1580720857:S=ALNI_MagBH-J7WMb_uniATmi3TEKwQJLlg; _fmdata=4mpUKjarJLOffOtXKfD2vzb%2B7fsRpeT9lDmsk7w0WFvRJ02GrVRreTdzU15dep%2BtPh%2BdjVcouL0XJHmqajM1C57pwW4MrnoPLAKjbMezhI4%3D; _ga=GA1.2.884080577.1580754832; _gid=GA1.2.135845903.1580754832; __dacevid3=0xc0a0b535ad0a166d; __closeapp=1; _HUPUSSOID=50310739-338f-489f-bdd5-3a31fbf81361; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%221700a4e53eb4f-08d457ee4c087b-b383f66-1440000-1700a4e53edfb%22%2C%22%24device_id%22%3A%221700a4e53eb4f-08d457ee4c087b-b383f66-1440000-1700a4e53edfb%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer_host%22%3A%22%22%7D%7D; _cnzz_CV30020080=buzi_cookie%7Cd45addeb.76df.8827.9ddb.d9b8bd3538d1%7C-1; AUM=dg77BvbLBJirihebQtxZUlKnjN5nt-yqlWtWpTno5j7lw; _CLT=b0c2a05996d8b48b354e1fa4ddfc1fef; u=64110360|6JmO5omRSlIwODU0MTQ1NjM3|4986|f5c133ad45dda64a8365ac20542d4164|45dda64a8365ac20|aHVwdV9lODI3Y2E3M2RlZmVlZWJk; us=91f8e68654c24668122c2162a8418f8c5bebaf73785106d71eb6fcb9502aaec8622ab596e70b21576c370304fbc2309e3d9e3313a3f45ff2e05330686732a434; ua=25914162; Hm_lvt_39fc58a7ab8a311f2f6ca4dc1222a96e=1580755509,1580755513,1580760867,1580764183; Hm_lpvt_39fc58a7ab8a311f2f6ca4dc1222a96e=1580764218; __dacevst=0c861d90.e7d6475f|1580766036014','referer': 'https://my.hupu.com/search?fid=34&type=topic&q=%E5%A6%B9%E5%AD%90', 'sec-fetch-mode':'navigate', 'sec-fetch-site': 'same-origin', 'sec-fetch-user': '?1', 'upgrade-insecure-requests': '1'}
         html = requests.get(url, headers=hs)
+        #print(html.text)
 
         #返回请求的头部信息
-        print(html.request.headers)  
+        #print(html.request.headers)  
 
         soup = BeautifulSoup(html.text, 'html.parser')
         urls = soup.findAll('a', target="_blank")
+        print(urls)
         for url in urls:
             srcs = url['href']
             words = re.findall(r'/[0-9]{8}\.html', srcs)
@@ -162,7 +165,7 @@ if __name__ == "__main__":
     #getUrlLink()
     #getTiebaPic()
 
-    getHupuUrl(20,50,True)
+    getHupuUrl(1,50,False)
     #getOnePageVideo('https://bbs.hupu.com/32131532.html')
 
 
