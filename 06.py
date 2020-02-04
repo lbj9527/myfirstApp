@@ -8,7 +8,6 @@
 import requests, re, os , sys        
 from bs4 import BeautifulSoup   #解析html
 from fake_useragent import UserAgent
-from pyquery import PyQuery as pq
 import urllib
 
 
