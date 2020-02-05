@@ -3,6 +3,7 @@ from dotenv import find_dotenv, load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 import os,sys
 
+###################################初始化工作######################################
 WIN = sys.platform.startswith('win')
 if WIN:  # 如果是 Windows 系统，使用三个斜线
     prefix = 'sqlite:///'
@@ -23,6 +24,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False          # 关闭对模型�
 
 db = SQLAlchemy(app)  #初始化扩展，传入程序实例
 
+
+###################################建立数据库操作函数######################################
 #创建模型类
 class User(db.Model):     #表名将会是user
     id = db.Column(db.Integer, primary_key=True)   #主键
@@ -60,12 +63,15 @@ def forge():
         db.session.add(movie)
     db.session.commit()
 
+
+###################################flask网页生成######################################
 @app.route('/')
 def index():
     user = User.query.first()  # 读取用户记录
     movies = Movie.query.all()  # 读取所有电影记录
     return render_template('index.html', user = user, movies=movies)    #导入模板文件，并传入参数
 
+###################################主程序######################################
 if __name__ == "__main__":
     #创建数据库，并生成虚拟数据
     forge()
