@@ -18,7 +18,7 @@ lib/
 lib64/
 parts/
 sdist/
-var/
+var/db
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
@@ -30,6 +30,9 @@ MANIFEST
 #dir
 video/
 pic/girls*
+
+#db file
+*.db
 
 
 # PyInstaller
