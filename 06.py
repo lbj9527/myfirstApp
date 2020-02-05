@@ -9,6 +9,8 @@ import requests, re, os , sys
 from bs4 import BeautifulSoup   #解析html
 from fake_useragent import UserAgent
 import urllib
+import multiprocessing
+import time
 
 
 #例子1：获取网站正文
@@ -45,11 +47,14 @@ def getTiebaPic():
         with open('pic/girls/' + os.path.split(img_src)[1], 'wb') as f:
             f.write(requests.get(img_src).content)    #下载图片
 
+def mutilGetHupu(count):
+    getHupuUrl(urllib.parse.quote('微胖'), 1*(count+1), 2*(count+1), True)
+
 #例子4：获取虎扑步行街美女图片及视频
 def getHupuUrl(keyword, startPage, stopPage, videoOrPic= False):
     #虎扑步行街主干道的帖子链接
     for index in range(startPage,stopPage):
-        print('-----------------------------搜索%s关键词:第%d页-----------------------------' % (urllib.parse.unquote(keyword),index))
+        print('-----------------------------进程:%s:搜索%s关键词,第%d页-----------------------------' % (os.getpid(), urllib.parse.unquote(keyword),index))
 
         url =  'https://my.hupu.com/search?q=' + keyword + '&sortby=createtime&page=' + str(index) + '&fid=&type=undefined'
 
@@ -84,19 +89,23 @@ def getHupuUrl(keyword, startPage, stopPage, videoOrPic= False):
             if videoOrPic:
                 getOnePageVideo(address,i)
             else:
-                getOnePagePic(address)
+                getOnePagePic(address, i)
 
 #例子5：获取虎扑单个帖子图片
-def getOnePagePic(img_address = str()):
+def getOnePagePic(img_address, picIndex):
      #进入帖子
     img_html = requests.get(img_address)
     soup_img = BeautifulSoup(img_html.text, 'html.parser')
     img_urls2 = soup_img.findAll('img')
     img_url_set = set(img_urls2)        #避免重复下载
  
+     #获取帖子标题
+    title = soup_img.title.string
+    title = title[:title.index('-')].replace(' ','').replace('\n', '').replace('\r', '').replace('?', '').replace('!', '')
 
+    url_index=0
     for img_url in img_url_set:
-
+        url_index += 1
         img_src = img_url.get("src","none")
         if img_src == "none":
             continue
@@ -115,7 +124,7 @@ def getOnePagePic(img_address = str()):
         #以下图片格式不爬
         isFilter = True
         itFil = True
-        filters = ['png', 'octet-stream', '185', 'default_small.jpg', 'gif']
+        filters = ['png', 'octet-stream', '185', 'default_small.jpg']
         for filter in filters:
             if filter in filename:
                 itFil = False
@@ -123,11 +132,16 @@ def getOnePagePic(img_address = str()):
 
         if not isFilter:
             continue
+
+        if 'imgur' in img_src:
+            continue
+
+        filename = str(picIndex) + '-' + str(url_index) + '-' + title + img_src[-4:]
             
         if '.' in filename:
             print("图片链接：%s" % img_src)
             with open('pic/girls/' + filename, 'wb') as f:
-                f.write(requests.get(img_src).content)    #下载图片
+                f.write(requests.get(img_src, timeout=500).content)    #下载图片
 
 #例子6：获取虎扑单个帖子视频
 def getOnePageVideo(video_address,videoIndex):
@@ -167,8 +181,16 @@ if __name__ == "__main__":
     #getUrlBody()
     #getUrlLink()
     #getTiebaPic()
-    getHupuUrl(urllib.parse.quote('微胖'), 1, 25, True)
+    getHupuUrl(urllib.parse.quote('长腿'), 17, 25, False)
     #getOnePageVideo('https://bbs.hupu.com/32134074.html',7)
+    #getOnePagePic('https://bbs.hupu.com/32158430.html',7)
+
+    #线程池爬取(存在问题，会重复爬取某个网页)
+    # pool = multiprocessing.Pool(multiprocessing.cpu_count())
+    # pool.map(mutilGetHupu, range(12))
+    # pool.close()
+    # pool.join()
+
 
 
 
