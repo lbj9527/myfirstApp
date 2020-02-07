@@ -30,6 +30,7 @@ MANIFEST
 #dir
 video/
 pic/girls*
+file/filmUrl
 
 #db file
 *.db
