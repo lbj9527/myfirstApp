@@ -64,12 +64,30 @@ def forge():
     db.session.commit()
 
 
-###################################flask网页生成######################################
+###################################flask网页生成(视图函数)######################################
 @app.route('/')
 def index():
-    user = User.query.first()  # 读取用户记录
     movies = Movie.query.all()  # 读取所有电影记录
-    return render_template('index.html', user = user, movies=movies)    #导入模板文件，并传入参数
+    return render_template('index.html', movies=movies)    #导入模板文件，并传入参数
+
+#######################################模板上下文处理函数#################################
+@app.context_processor
+def inject_user():
+    user = User.query.first()    # 读取用户记录
+    return dict(user=user)    #返回字典，等同于return {'user':user}
+
+#######################################错误处理函数#################################
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'),404
+
+
+
+
+
+
+
+
 
 ###################################主程序######################################
 if __name__ == "__main__":
