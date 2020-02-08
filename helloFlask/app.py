@@ -3,6 +3,8 @@ from flask import render_template, Flask
 from dotenv import find_dotenv, load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 import os,sys
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, UserMixin,login_user,logout_user,login_required,current_user
 
 ###################################初始化工作######################################
 WIN = sys.platform.startswith('win')
@@ -19,6 +21,10 @@ load_dotenv(find_dotenv())
 #实例化这个类，创建一个程序对象 app
 app = Flask(__name__)
 
+#实例化登录类
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'    #设为我们程序的登录视图端点(函数名)
+
 #配置变量的名称必须使用大写，写入配置的语句一般会放到扩展类实例化语句之前
 app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(app.root_path, 'data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False          # 关闭对模型修改的监控
@@ -31,9 +37,17 @@ db = SQLAlchemy(app)  #初始化扩展，传入程序实例
 
 ###################################建立数据库操作函数######################################
 #创建模型类
-class User(db.Model):     #表名将会是user
+class User(db.Model, UserMixin):     #表名将会是user;继承UserMixin类会让 User 类拥有几个用于判断认证状态的属性和方法
     id = db.Column(db.Integer, primary_key=True)   #主键
-    name = db.Column(db.String(20))    #名字
+    name = db.Column(db.String(20))                #名字
+    username = db.Column(db.String(20))            #用户名
+    password_hash = db.Column(db.String(128))      #密码散列值
+
+    def set_password(self, password):      #用来设置密码的方法，接受密码作为参数
+        self.password_hash = generate_password_hash(password)      #将生成的密码保存到对应字段     
+
+    def validate_password(self, password):      #用于验证密码的方法，接受密码作为参数
+        return check_password_hash(self.password_hash, password)     #返回布尔值
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -73,6 +87,8 @@ def forge():
 @app.route('/',methods = ['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        if not current_user.is_authenticated:    #如果用户未认证
+            return redirect(url_for('index'))
         #获取表单数据
         title = request.form.get('title')  #传入表单对应输入字段的name值
         year = request.form.get('year')
@@ -95,6 +111,7 @@ def index():
 
 #记录编辑页
 @app.route('/movie/edit/<int:movie_id>', methods=['GET','POST'])
+@login_required     #登录保护，未登录用户不能访问
 def edit(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     if request.method == 'POST':    #处理编辑表单的提交请求
@@ -123,11 +140,78 @@ def delete(movie_id):
     flash('Item deleted.')
     return redirect(url_for('index')) #重定向到主页
 
+#用户登录
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
+        if not username or not password:
+            flash('Invalid  input.')
+            return redirect(url_for('login'))
 
+        user = User.query.first()
+        #验证用户名和密码是否一致
+        if username == user.username and user.validate_password(password):
+            login_user(user)    #登入用户
+            flash('Login success.')
+            return redirect(url_for('index'))    #重定向到主页
 
+        flash('Invalid username or password.')   #如果验证失败，显示错误消息
+        return redirect(url_for('login'))      #重定向回登录页面
+    return render_template('login.html')
 
+#用户登出
+@app.route('/logout')
+@login_required   #登录保护，未登录用户不能访问
+def logout():
+    logout_user()   #登出用户
+    flash('Googbye.')
+    return redirect(url_for('index'))
 
+#设置页面，支持设置用户名字
+@app.route('/settings', methods=['GET','POST'])
+@login_required
+def settings():
+    if request.method == 'POST':
+        name = request.form['name']
+        
+        if not name or len(name) > 20:
+            flash('Invalid input.')
+            return redirect(url_for('settings'))
+
+        # current_user 会返回当前登录用户的数据库记录对象
+        # 等同于下面的用法
+        # user = User.query.first()
+        # user.name = name
+        current_user.name = name
+        
+        db.session.commit()
+        flash('Setting updated.')
+        return redirect(url_for('index'))
+
+    return render_template('settings.html')
+
+###################################生成管理员账户######################################
+def admin(username, password):
+    user = User.query.first()
+    if user is not None:
+        user.username = username
+        user.set_password(password)    #设置密码
+    else:
+        user = User(username=username, name='Admin')
+        user.set_password(password)
+        db.session.add(user)
+    db.session.commit()      #提交数据库会话
+    
+#初始化Flask-Login(用户加载回调函数)
+#Flask-Login 提供了一个 current_user 变量，注册这个函数的目的是，当程序运行后，
+# 如果用户已登录， current_user 变量的值会是当前用户的用户模型类记录
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.get(int(user_id))
+    return user    #返回用户对象
 
 #######################################模板上下文处理函数#################################
 @app.context_processor
@@ -150,7 +234,12 @@ def page_not_found(e):
 
 ###################################主程序######################################
 if __name__ == "__main__":
+
     #创建数据库，并生成虚拟数据
     forge()
+
+        #生成管理员账户
+    admin('admin','123456')
+
     app.run()
 
