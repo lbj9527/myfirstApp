@@ -1,5 +1,7 @@
 import unittest
-from app import app, db, Movie, User, forge
+from watchlist import app, db
+from watchlist.models import Movie, User
+from watchlist.commands import forge
 
 class WacthlistTestCase(unittest.TestCase):
     def setUp(self):
@@ -239,16 +241,16 @@ class WacthlistTestCase(unittest.TestCase):
     #     result = self.runner.invoke(initdb)
     #     self.assertIn('Initialized database.', result.output)
 
-    # # 测试生成管理员账户
-    # def test_admin_command(self):
-    #     db.drop_all()
-    #     db.create_all()
-    #     result = self.runner.invoke(args=['admin', '--username', 'grey', '--password', '123'])
-    #     self.assertIn('Creating user...', result.output)
-    #     self.assertIn('Done.', result.output)
-    #     self.assertEqual(User.query.count(), 1)
-    #     self.assertEqual(User.query.first().username, 'grey')
-    #     self.assertTrue(User.query.first().validate_password('123'))
+    # 测试生成管理员账户
+    def test_admin_command(self):
+        db.drop_all()
+        db.create_all()
+        result = self.runner.invoke(args=['admin', '--username', 'admin', '--password', '123456'])
+        self.assertIn('Creating user...', result.output)
+        self.assertIn('Done.', result.output)
+        self.assertEqual(User.query.count(), 1)
+        self.assertEqual(User.query.first().username, 'admin')
+        self.assertTrue(User.query.first().validate_password('123456'))
 
     # # 测试更新管理员账户
     # def test_admin_command_update(self):
