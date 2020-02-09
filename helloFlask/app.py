@@ -5,8 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 import os,sys
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin,login_user,logout_user,login_required,current_user
+import click
 
-###################################初始化工作######################################
+############################################################初始化工作##########################################################
 WIN = sys.platform.startswith('win')
 if WIN:  # 如果是 Windows 系统，使用三个斜线
     prefix = 'sqlite:///'
@@ -35,7 +36,7 @@ app.config['SECRET_KEY'] = 'dev'   #flash() 函数在内部会把消息存储到
 db = SQLAlchemy(app)  #初始化扩展，传入程序实例
 
 
-###################################建立数据库操作函数######################################
+#######################################################建立数据库操作函数#########################################################
 #创建模型类
 class User(db.Model, UserMixin):     #表名将会是user;继承UserMixin类会让 User 类拥有几个用于判断认证状态的属性和方法
     id = db.Column(db.Integer, primary_key=True)   #主键
@@ -54,6 +55,8 @@ class Movie(db.Model):
     title = db.Column(db.String(60))    #电影标题
     year = db.Column(db.String(4))      #电影年份
 
+#手动命令行命令，用来创建虚拟数据
+@app.cli.command()
 def forge():
     """Generate fake data."""
     db.drop_all()    #先删除所有数据
@@ -80,9 +83,10 @@ def forge():
         movie = Movie(title=m['title'], year=m['year'])
         db.session.add(movie)
     db.session.commit()
+    click.echo('Done.')
 
 
-###################################flask网页生成(视图函数)######################################
+#####################################################flask网页生成(视图函数)####################################################
 #主页
 @app.route('/',methods = ['GET', 'POST'])
 def index():
@@ -101,11 +105,7 @@ def index():
         db.session.add(movie)    #添加到数据库会话
         db.session.commit()      #提交数据库会话
         flash('Item created.')   #显示成功创建的提示
-        return redirect(url_for('index'))    #重定向回主页
-    user = User.query.first()
-    movies = Movie.query.all()
-    return render_template('index.html', user=user, movies = movies)
-        
+        return redirect(url_for('index'))    #重定向回主页   
     movies = Movie.query.all()  # 读取所有电影记录
     return render_template('index.html', movies=movies)    #导入模板文件，并传入参数
 
@@ -148,7 +148,7 @@ def login():
         password = request.form['password']
 
         if not username or not password:
-            flash('Invalid  input.')
+            flash('Invalid input.')
             return redirect(url_for('login'))
 
         user = User.query.first()
@@ -167,7 +167,7 @@ def login():
 @login_required   #登录保护，未登录用户不能访问
 def logout():
     logout_user()   #登出用户
-    flash('Googbye.')
+    flash('Goodbye.')
     return redirect(url_for('index'))
 
 #设置页面，支持设置用户名字
@@ -193,9 +193,10 @@ def settings():
 
     return render_template('settings.html')
 
-###################################生成管理员账户######################################
+###############################################################生成管理员账户#######################################################
 def admin(username, password):
     user = User.query.first()
+    print('user', user)
     if user is not None:
         user.username = username
         user.set_password(password)    #设置密码
@@ -213,13 +214,13 @@ def load_user(user_id):
     user = User.query.get(int(user_id))
     return user    #返回用户对象
 
-#######################################模板上下文处理函数#################################
+#############################################################模板上下文处理函数#####################################################
 @app.context_processor
 def inject_user():
     user = User.query.first()    # 读取用户记录
     return dict(user=user)    #返回字典，等同于return {'user':user}
 
-#######################################错误处理函数#################################
+################################################################错误处理函数#######################################################
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'),404
@@ -235,11 +236,14 @@ def page_not_found(e):
 ###################################主程序######################################
 if __name__ == "__main__":
 
-    #创建数据库，并生成虚拟数据
-    forge()
-
-        #生成管理员账户
+    #生成管理员账户
     admin('admin','123456')
 
     app.run()
 
+
+
+
+###################################备注######################################
+#1.程序中会报db没有某某成员的错误，着其实不是错误，运行时没有问题
+#  原因：db的成员是程序运行时产生的，pylint只能检查静态的语法错误

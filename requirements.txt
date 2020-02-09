@@ -1,5 +1,6 @@
 astroid==2.3.3
 beautifulsoup4==4.8.2
+bs4==0.0.1
 certifi==2019.11.28
 chardet==3.0.4
 Click==7.0
@@ -8,7 +9,9 @@ cssselect==1.1.0
 dnspython==1.16.0
 fake-useragent==0.1.11
 Flask==1.1.1
+Flask-Login==0.4.1
 Flask-SQLAlchemy==2.4.1
+fmovice==0.1.0
 idna==2.8
 isort==4.3.21
 itsdangerous==1.1.0
